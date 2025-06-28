@@ -1,4 +1,4 @@
-package dev.estimo.backend;
+package co.estimoo.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
