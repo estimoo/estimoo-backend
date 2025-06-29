@@ -9,6 +9,7 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
+.mvn
 
 # Gradle
 .gradle/
@@ -131,6 +132,7 @@ jspm_packages/
 .env
 .env.test
 .env.production
+.env.prod
 .env.local
 .env.development.local
 .env.test.local
