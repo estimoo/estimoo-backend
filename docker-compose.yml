@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  estimoo-backend:
+    build: .
+    container_name: estimoo-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - SPRING_WEB_CORS_ALLOWED_ORIGINS=https://estimoo.co,https://www.estimoo.co,http://localhost:3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+          cpus: '1.5'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    networks:
+      - estimoo-network
+
+networks:
+  estimoo-network:
+    driver: bridge 

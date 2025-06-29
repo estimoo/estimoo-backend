@@ -1,22 +1,18 @@
 package co.estimoo.backend.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.*;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private static final String[] ALLOWED_ORIGINS = {
-            "https://api.estimoo.co",
-            "http://api.estimoo.co", 
-            "https://estimoo.co",
-            "http://estimoo.co",
-            "http://localhost:5173",
-            "http://localhost:3000",
-            "http://localhost:8080"
-    };
+    @Value("${spring.web.cors.allowed-origins:http://localhost:3000,http://localhost:5173}")
+    private String allowedOrigins;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -28,7 +24,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins(ALLOWED_ORIGINS)
+                .setAllowedOriginPatterns(allowedOrigins.split(","))
                 .addInterceptors(new SessionHandshakeInterceptor())
                 .withSockJS();
     }
