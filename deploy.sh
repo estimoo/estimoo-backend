@@ -3,6 +3,17 @@
 # Estimoo Backend Deployment Script
 set -e
 
+# Check if environment file exists
+if [ ! -f ".env.prod" ]; then
+    echo "❌ .env.prod file not found!"
+    echo "📝 Please create .env.prod file based on env.prod.example"
+    echo "💡 Example: cp env.prod.example .env.prod"
+    exit 1
+fi
+
+# Load environment variables
+source .env.prod
+
 echo "🚀 Starting Estimoo Backend Deployment..."
 
 # Check if Docker is running
@@ -24,14 +35,18 @@ echo "🛑 Stopping existing container..."
 docker stop estimoo-backend || true
 docker rm estimoo-backend || true
 
-# Start new container
+# Start new container with production environment
 echo "▶️ Starting new container..."
 docker run -d \
     --name estimoo-backend \
     --restart unless-stopped \
     -p 8080:8080 \
-    -e SPRING_PROFILES_ACTIVE=production \
-    -e SPRING_WEB_CORS_ALLOWED_ORIGINS="https://estimoo.co,https://www.estimoo.co,http://localhost:3000" \
+    -e SPRING_PROFILES_ACTIVE=prod \
+    -e DB_HOST="$DB_HOST" \
+    -e DB_PORT="$DB_PORT" \
+    -e DB_NAME="$DB_NAME" \
+    -e DB_USERNAME="$DB_USERNAME" \
+    -e DB_PASSWORD="$DB_PASSWORD" \
     --memory=1.5g \
     --cpus=1.5 \
     estimoo-backend:latest

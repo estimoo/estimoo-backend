@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  estimoo-backend:
+    build: .
+    container_name: estimoo-backend-prod
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+          cpus: '1.5'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    networks:
+      - estimoo-network
+
+networks:
+  estimoo-network:
+    driver: bridge 

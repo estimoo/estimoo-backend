@@ -10,20 +10,76 @@ Bu repo, Estimoo'nun Spring Boot tabanlı backend servislerini içerir.
 ### Gereksinimler
 - Java 17+
 - Maven 3.8+
-- (Opsiyonel) Docker (prod için)
+- Docker (development ve production için)
+- PostgreSQL (production için)
 
 ### Geliştirme Ortamı Kurulumu
 
+#### 🚀 Hızlı Başlangıç (Önerilen)
 ```bash
 git clone https://github.com/senin-repon/estimoo-backend.git
 cd estimoo-backend
+./dev.sh
+```
+
+Bu komut:
+- PostgreSQL'i Docker'da başlatır
+- Backend'i development profile ile çalıştırır
+- Health check yapar
+- Tüm servisleri hazır hale getirir
+
+#### 🔧 Manuel Kurulum
+```bash
+git clone https://github.com/senin-repon/estimoo-backend.git
+cd estimoo-backend
+
+# PostgreSQL ve Backend'i Docker Compose ile başlat
+docker-compose up -d
+
+# Veya sadece Maven ile (PostgreSQL ayrı kurulmalı)
 mvn clean install
-mvn spring-boot:run
+mvn spring-boot:run -Dspring.profiles.active=dev
+```
+
+#### 📊 Development Ortamı Bilgileri
+- **Backend API:** http://localhost:8080
+- **PostgreSQL:** localhost:5432
+- **Database:** estimoo_dev
+- **Username:** estimoo_user
+- **Password:** estimoo_password
+- **Profile:** dev
+
+#### 🛠️ Development Komutları
+```bash
+# Tüm servisleri başlat
+./dev.sh
+
+# Logları görüntüle
+docker-compose logs -f
+
+# Servisleri durdur
+docker-compose down
+
+# Servisleri yeniden başlat
+docker-compose restart
+
+# Sadece backend'i yeniden başlat
+docker-compose restart estimoo-backend
 ```
 
 ### Prod Ortamı için (Docker/Podman ile)
 
 #### Docker kullanarak:
+```bash
+# Environment dosyası oluştur
+cp env.prod.example .env.prod
+# .env.prod dosyasını düzenle (DB_HOST, DB_USERNAME, DB_PASSWORD)
+
+# Deploy et
+./deploy.sh
+```
+
+#### Manuel Docker deployment:
 ```bash
 mvn clean package -DskipTests
 docker build -t estimoo-backend .
@@ -41,6 +97,30 @@ podman run -p 8080:8080 estimoo-backend
 ```bash
 mvn clean package -DskipTests
 java -jar target/backend-0.0.1-SNAPSHOT.jar
+```
+
+---
+
+## Veritabanı Yapılandırması
+
+### Development Ortamı
+- **PostgreSQL Docker'da çalışır**
+- **Otomatik kurulum:** `./dev.sh` komutu ile
+- **Veri kalıcılığı:** Docker volume (`postgres_data`)
+- **Bağlantı:** `jdbc:postgresql://localhost:5432/estimoo_dev`
+
+### Production Ortamı
+- **PostgreSQL normal sunucuda çalışır**
+- **Environment variables:** `.env.prod` dosyasında
+- **Bağlantı:** `jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}`
+
+### Environment Variables (Production)
+```bash
+DB_HOST=your-production-db-host
+DB_PORT=5432
+DB_NAME=estimoo_prod
+DB_USERNAME=estimoo_user
+DB_PASSWORD=your-secure-password
 ```
 
 ---
