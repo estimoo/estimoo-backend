@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/rooms")
 @RequiredArgsConstructor
-@CrossOrigin
 public class RoomRestResource {
 
     private final RoomService roomService;
