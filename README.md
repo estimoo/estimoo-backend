@@ -21,11 +21,26 @@ mvn clean install
 mvn spring-boot:run
 ```
 
-### Prod Ortamı için (Dockerize etmek istersen)
+### Prod Ortamı için (Docker/Podman ile)
+
+#### Docker kullanarak:
 ```bash
-mvn clean package
+mvn clean package -DskipTests
 docker build -t estimoo-backend .
 docker run -p 8080:8080 estimoo-backend
+```
+
+#### Podman kullanarak (Docker alternatifi):
+```bash
+mvn clean package -DskipTests
+podman build -t estimoo-backend .
+podman run -p 8080:8080 estimoo-backend
+```
+
+#### Sadece JAR dosyasını çalıştırarak:
+```bash
+mvn clean package -DskipTests
+java -jar target/backend-0.0.1-SNAPSHOT.jar
 ```
 
 ---
