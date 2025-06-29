@@ -8,5 +8,5 @@ import lombok.Data;
 public class UserSession {
     private String sessionId;
     private String nickname;
-    private String vote;
+    private VoteValue vote;
 }
