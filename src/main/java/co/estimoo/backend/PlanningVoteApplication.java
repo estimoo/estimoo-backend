@@ -8,8 +8,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class PlanningVoteApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(PlanningVoteApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(PlanningVoteApplication.class, args);
+    }
 
 }

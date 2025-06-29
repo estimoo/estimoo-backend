@@ -17,6 +17,7 @@ public class RoomService {
 
     /**
      * Yeni oda oluşturur ve roomCode’a göre saklar.
+     *
      * @param roomName Kullanıcının girdiği görünen oda adı
      * @return Room nesnesi
      */
@@ -31,6 +32,7 @@ public class RoomService {
 
     /**
      * roomCode ile odanın getirilmesini sağlar.
+     *
      * @param roomCode URL'den gelen benzersiz oda kodu
      * @return Room ya da null
      */
