@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Data
 public class Room {
     private String roomCode;
+    private String roomName;
     private Map<String, UserSession> users = new ConcurrentHashMap<>();
     private boolean votesRevealed = false;
     private LocalDateTime lastActivity = LocalDateTime.now();

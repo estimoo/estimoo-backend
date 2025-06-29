@@ -15,14 +15,25 @@ public class RoomService {
     @Getter
     private final Map<String, Room> rooms = new ConcurrentHashMap<>();
 
-    public Room createRoom() {
-        String roomCode = UUID.randomUUID().toString().substring(0, 6);
+    /**
+     * Yeni oda oluşturur ve roomCode’a göre saklar.
+     * @param roomName Kullanıcının girdiği görünen oda adı
+     * @return Room nesnesi
+     */
+    public Room createRoom(String roomName) {
+        String roomCode = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
         Room room = new Room();
         room.setRoomCode(roomCode);
+        room.setRoomName(roomName);
         rooms.put(roomCode, room);
         return room;
     }
 
+    /**
+     * roomCode ile odanın getirilmesini sağlar.
+     * @param roomCode URL'den gelen benzersiz oda kodu
+     * @return Room ya da null
+     */
     public Room getRoom(String roomCode) {
         return rooms.get(roomCode);
     }
@@ -31,4 +42,3 @@ public class RoomService {
         rooms.remove(roomCode);
     }
 }
-

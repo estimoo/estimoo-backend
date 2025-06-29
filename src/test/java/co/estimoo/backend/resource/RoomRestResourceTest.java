@@ -2,6 +2,7 @@ package co.estimoo.backend.resource;
 
 import co.estimoo.backend.model.Room;
 import co.estimoo.backend.service.RoomService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +16,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.springframework.http.MediaType;
+
 @ExtendWith(MockitoExtension.class)
 class RoomRestResourceTest {
 
@@ -25,39 +28,46 @@ class RoomRestResourceTest {
     private RoomRestResource roomRestResource;
 
     private MockMvc mockMvc;
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(roomRestResource).build();
+        objectMapper = new ObjectMapper();
     }
 
     @Test
     void createRoom_ShouldReturnCreatedRoom() throws Exception {
         // Given
+        String roomName = "Deneme";
         Room expectedRoom = new Room();
         expectedRoom.setRoomCode("ABC123");
-        when(roomService.createRoom()).thenReturn(expectedRoom);
+        expectedRoom.setRoomName(roomName);
+
+        when(roomService.createRoom(roomName)).thenReturn(expectedRoom);
 
         // When & Then
-        mockMvc.perform(post("/rooms"))
+        mockMvc.perform(post("/rooms")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"roomName\":\"Deneme\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.roomCode").value("ABC123"))
+                .andExpect(jsonPath("$.roomName").value("Deneme"))
                 .andExpect(jsonPath("$.users").exists())
                 .andExpect(jsonPath("$.votesRevealed").value(false))
                 .andExpect(jsonPath("$.lastActivity").exists());
 
-        verify(roomService, times(1)).createRoom();
+        verify(roomService, times(1)).createRoom("Deneme");
     }
 
     @Test
     void getRoom_WithValidRoomCode_ShouldReturnRoom() throws Exception {
-        // Given
         String roomCode = "ABC123";
         Room expectedRoom = new Room();
         expectedRoom.setRoomCode(roomCode);
+
         when(roomService.getRoom(roomCode)).thenReturn(expectedRoom);
 
-        // When & Then
         mockMvc.perform(get("/rooms/{roomCode}", roomCode))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.roomCode").value(roomCode))
@@ -70,11 +80,9 @@ class RoomRestResourceTest {
 
     @Test
     void getRoom_WithNonExistentRoomCode_ShouldReturnNull() throws Exception {
-        // Given
         String roomCode = "NONEXISTENT";
         when(roomService.getRoom(roomCode)).thenReturn(null);
 
-        // When & Then
         mockMvc.perform(get("/rooms/{roomCode}", roomCode))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
@@ -83,34 +91,24 @@ class RoomRestResourceTest {
     }
 
     @Test
-    void createRoom_ShouldHandleServiceException() {
-        // Given
-        when(roomService.createRoom()).thenThrow(new RuntimeException("Service error"));
+    void createRoom_ShouldHandleServiceException() throws Exception {
+        when(roomService.createRoom("Deneme")).thenThrow(new RuntimeException("Service error"));
 
-        // When & Then
-        try {
-            roomRestResource.createRoom();
-            assert false : "Should have thrown an exception";
-        } catch (RuntimeException e) {
-            assert e.getMessage().equals("Service error");
-        }
+        mockMvc.perform(post("/rooms")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"roomName\":\"Deneme\"}"))
+                .andExpect(status().isInternalServerError());
 
-        verify(roomService, times(1)).createRoom();
+        verify(roomService, times(1)).createRoom("Deneme");
     }
 
     @Test
-    void getRoom_ShouldHandleServiceException() {
-        // Given
+    void getRoom_ShouldHandleServiceException() throws Exception {
         String roomCode = "ABC123";
         when(roomService.getRoom(roomCode)).thenThrow(new RuntimeException("Service error"));
 
-        // When & Then
-        try {
-            roomRestResource.getRoom(roomCode);
-            assert false : "Should have thrown an exception";
-        } catch (RuntimeException e) {
-            assert e.getMessage().equals("Service error");
-        }
+        mockMvc.perform(get("/rooms/{roomCode}", roomCode))
+                .andExpect(status().isInternalServerError());
 
         verify(roomService, times(1)).getRoom(roomCode);
     }
