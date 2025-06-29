@@ -79,13 +79,12 @@ class RoomRestResourceTest {
     }
 
     @Test
-    void getRoom_WithNonExistentRoomCode_ShouldReturnNull() throws Exception {
+    void getRoom_WithNonExistentRoomCode_ShouldReturn404() throws Exception {
         String roomCode = "NONEXISTENT";
         when(roomService.getRoom(roomCode)).thenReturn(null);
 
         mockMvc.perform(get("/rooms/{roomCode}", roomCode))
-                .andExpect(status().isOk())
-                .andExpect(content().string(""));
+                .andExpect(status().isNotFound());
 
         verify(roomService, times(1)).getRoom(roomCode);
     }

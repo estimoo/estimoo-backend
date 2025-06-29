@@ -6,10 +6,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class PlanningVoteApplication {
+public class EstimooBackendApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(PlanningVoteApplication.class, args);
+        SpringApplication.run(EstimooBackendApplication.class, args);
     }
 
-}
+} 

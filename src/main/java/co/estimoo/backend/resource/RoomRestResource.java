@@ -16,27 +16,39 @@ public class RoomRestResource {
 
     @PostMapping
     public ResponseEntity<Room> createRoom(@RequestBody RoomCreateRequest request) {
-        Room room = roomService.createRoom(request.getRoomName());
-        return ResponseEntity.ok(room);
+        try {
+            Room room = roomService.createRoom(request.getRoomName());
+            return ResponseEntity.ok(room);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @GetMapping("/{roomCode}")
     public ResponseEntity<Room> getRoom(@PathVariable String roomCode) {
-        Room room = roomService.getRoom(roomCode);
-        if (room != null) {
-            return ResponseEntity.ok(room);
-        } else {
-            return ResponseEntity.notFound().build();
+        try {
+            Room room = roomService.getRoom(roomCode);
+            if (room != null) {
+                return ResponseEntity.ok(room);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
         }
     }
 
     @GetMapping("/{roomCode}/exists")
     public ResponseEntity<Room> roomExists(@PathVariable String roomCode) {
-        Room room = roomService.getRoom(roomCode);
-        if (room != null) {
-            return ResponseEntity.ok(room);
-        } else {
-            return ResponseEntity.notFound().build();
+        try {
+            Room room = roomService.getRoom(roomCode);
+            if (room != null) {
+                return ResponseEntity.ok(room);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
         }
     }
 }
