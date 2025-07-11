@@ -7,6 +7,7 @@ import java.util.List;
 @Data
 public class RoomStateMessage {
     private List<UserVoteInfo> users;
+    private boolean votesRevealed;
 
     @Data
     public static class UserVoteInfo {

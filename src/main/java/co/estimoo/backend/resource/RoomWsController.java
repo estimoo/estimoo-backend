@@ -48,6 +48,7 @@ public class RoomWsController {
                     return info;
                 }).toList()
         );
+        state.setVotesRevealed(room.isVotesRevealed());
 
         messagingTemplate.convertAndSend("/topic/room/" + msg.getRoomCode(), state);
     }
@@ -100,6 +101,7 @@ public class RoomWsController {
                     return info;
                 }).toList()
         );
+        state.setVotesRevealed(room.isVotesRevealed());
 
         messagingTemplate.convertAndSend("/topic/room/" + msg.getRoomCode(), state);
     }
@@ -123,6 +125,7 @@ public class RoomWsController {
                     return info;
                 }).toList()
         );
+        state.setVotesRevealed(room.isVotesRevealed());
 
         messagingTemplate.convertAndSend("/topic/room/" + msg.getRoomCode(), state);
     }
@@ -147,6 +150,7 @@ public class RoomWsController {
                     return info;
                 }).toList()
         );
+        state.setVotesRevealed(room.isVotesRevealed());
 
         messagingTemplate.convertAndSend("/topic/room/" + msg.getRoomCode(), state);
     }
