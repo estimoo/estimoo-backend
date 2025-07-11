@@ -11,7 +11,7 @@ import java.util.Arrays;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    @Value("${spring.web.cors.allowed-origins:http://localhost:3000,http://localhost:5173}")
+    @Value("${spring.web.cors.allowed-origins:http://localhost:3000,http://localhost:5173,https://estimoo.co,https://www.estimoo.co}")
     private String allowedOrigins;
 
     @Override
