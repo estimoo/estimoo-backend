@@ -14,7 +14,7 @@ import java.util.Arrays;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
-    @Value("${spring.web.cors.allowed-origins:http://localhost:3000,http://localhost:5173}")
+    @Value("${spring.web.cors.allowed-origins:http://localhost:3000,http://localhost:5173,https://estimoo.co}")
     private String allowedOrigins;
 
     @Override
